@@ -76,6 +76,10 @@ function RootStack() {
         <Stack.Screen name="calendar" />
         <Stack.Screen name="music" />
         <Stack.Screen name="movies" />
+        <Stack.Screen name="blog" />
+        <Stack.Screen name="blog/[slug]" />
+        <Stack.Screen name="poems" />
+        <Stack.Screen name="journal" />
         <Stack.Screen name="tour" options={{ presentation: 'fullScreenModal' }} />
         <Stack.Screen name="profile-settings" options={{ presentation: 'modal' }} />
         <Stack.Screen name="about/novella" />

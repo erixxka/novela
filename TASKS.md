@@ -10,7 +10,6 @@ Tasks ready for `/implement`.
 
 | Task | Priority | Task Doc | Created |
 |------|----------|----------|---------|
-| Sanity Blog + Poems / Journal Tiles | HIGH | [sanity-blog.md](docs/task/sanity-blog.md) | 2026-05-29 |
 
 ---
 
@@ -31,6 +30,7 @@ Tasks being tested via `/test`.
 | Page-Turn Reader | [reading-reader.md](docs/task/reading-reader.md) | Pending | Ready for test |
 | Story Notes | [story-notes.md](docs/task/story-notes.md) | Pending | Ready for test |
 | Profile Features — Calendar, Music, Movies | [profile-features.md](docs/task/profile-features.md) | Pending | Ready for test |
+| Sanity Blog + Poems / Journal Tiles | [sanity-blog.md](docs/task/sanity-blog.md) | Pending | Ready for test |
 
 ---
 

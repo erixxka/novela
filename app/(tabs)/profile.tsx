@@ -5,7 +5,7 @@ import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import { Moon, Sun, Smartphone, LogOut, Type, Bell, Lock, Heart, Pencil, Compass } from 'lucide-react-native';
 import { InstagramIcon, FacebookIcon, WattpadIcon } from '../../components/SocialIcons';
-import { CalendarIcon, MusicIcon, MovieIcon } from '../../components/profile/FeatureIcons';
+import { CalendarIcon, MusicIcon, MovieIcon, BlogIcon, PoemsIcon, JournalIcon } from '../../components/profile/FeatureIcons';
 import { FeatureTile } from '../../components/profile/FeatureTile';
 import { useTheme } from '../../lib/theme';
 import { useAuth } from '../../lib/auth';
@@ -172,6 +172,13 @@ export default function ProfileScreen() {
           <FeatureTile icon={CalendarIcon} label="Calendar" onPress={() => router.push('/calendar')} />
           <FeatureTile icon={MusicIcon}    label="Music"    onPress={() => router.push('/music')} />
           <FeatureTile icon={MovieIcon}    label="Movies"   onPress={() => router.push('/movies')} />
+        </View>
+
+        {/* Feature tiles — Blog / Poems / Journal */}
+        <View style={{ flexDirection: 'row', gap: 10, marginHorizontal: 20, marginTop: 10 }}>
+          <FeatureTile icon={BlogIcon}    label="Blog"    onPress={() => router.push('/blog')} />
+          <FeatureTile icon={PoemsIcon}   label="Poems"   onPress={() => router.push('/poems')} />
+          <FeatureTile icon={JournalIcon} label="Journal" onPress={() => router.push('/journal')} />
         </View>
 
         {/* Appearance */}

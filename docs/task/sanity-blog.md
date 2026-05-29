@@ -1,12 +1,14 @@
 # Sanity Blog + Poems / Journal Tiles
 
-> **Status:** PLANNED
+> **Status:** TESTING
 > **Priority:** HIGH
 > **Type:** feature
 > **Version Impact:** minor
 > **Created:** 2026-05-29
+> **Completed:** 2026-05-29
 > **Platform:** Mobile (Expo / React Native)
 > **Automation:** manual
+> **Implementation Notes:** Added `@sanity/client@6` (pure JS, Expo Go safe). New files: `lib/sanity.ts`, `lib/queries/blog.ts`, `components/blog/PortableText.tsx`, `components/blog/BlogCard.tsx`, `components/ComingSoon.tsx`, `app/blog.tsx`, `app/blog/[slug].tsx`, `app/poems.tsx`, `app/journal.tsx`. Modified `FeatureIcons.tsx` (Blog/Poems/Journal icons), `app/(tabs)/profile.tsx` (2nd tile row), `app/_layout.tsx` (route registration). Blog list has pull-to-refresh + error/empty/loading states; reader handles missing mainImage/author. `tsc` clean for all new files (36 pre-existing Supabase `never`-typing errors remain in untouched files). Expo typed-routes regenerated to include the new routes. Not yet run on a device/simulator — needs `/test`.
 
 ## Overview
 
