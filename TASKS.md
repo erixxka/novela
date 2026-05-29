@@ -10,6 +10,7 @@ Tasks ready for `/implement`.
 
 | Task | Priority | Task Doc | Created |
 |------|----------|----------|---------|
+| Sanity Blog + Poems / Journal Tiles | HIGH | [sanity-blog.md](docs/task/sanity-blog.md) | 2026-05-29 |
 
 ---
 

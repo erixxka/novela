@@ -16,12 +16,14 @@ export function FeatureTile({
     >
       <View
         style={{
+          flex: 1,
           backgroundColor: '#FAF6F2',
           borderRadius: 16,
           borderWidth: 1,
           borderColor: 'rgba(47,65,86,0.10)',
           paddingVertical: 18,
           alignItems: 'center',
+          justifyContent: 'center',
           gap: 8,
         }}
       >
