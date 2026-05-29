@@ -150,19 +150,20 @@ export default function ContactScreen() {
           <Pressable
             onPress={send}
             disabled={!canSend || sending}
-            style={({ pressed }) => ({
+            style={({ pressed }) => ({ opacity: pressed ? 0.8 : 1 })}
+          >
+            <View style={{
               marginHorizontal: 20, marginTop: 16,
               backgroundColor: canSend ? '#2F4156' : 'rgba(47,65,86,0.20)',
               borderRadius: 999,
               paddingVertical: 14,
               flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8,
-              opacity: pressed ? 0.8 : 1,
-            })}
-          >
-            <Send size={14} color={canSend ? '#F5EFEB' : 'rgba(47,65,86,0.40)'} />
-            <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.8, textTransform: 'uppercase', color: canSend ? '#F5EFEB' : 'rgba(47,65,86,0.40)' }}>
-              {sending ? 'Opening mail…' : 'Send message'}
-            </Text>
+            }}>
+              <Send size={14} color={canSend ? '#F5EFEB' : 'rgba(47,65,86,0.40)'} />
+              <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 11, letterSpacing: 1.8, textTransform: 'uppercase', color: canSend ? '#F5EFEB' : 'rgba(47,65,86,0.40)' }}>
+                {sending ? 'Opening mail…' : 'Send message'}
+              </Text>
+            </View>
           </Pressable>
 
           <Text style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: 'rgba(47,65,86,0.35)', textAlign: 'center', marginTop: 12, marginHorizontal: 32 }}>

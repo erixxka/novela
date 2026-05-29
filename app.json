@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Novella",
+    "name": "noveḷɑ",
     "slug": "novella",
     "version": "0.1.0",
     "orientation": "portrait",
@@ -37,7 +37,7 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "Novella needs access to your photos so you can pick a cover image for your stories."
+          "photosPermission": "noveḷɑ needs access to your photos so you can pick a cover image for your stories."
         }
       ],
       "expo-asset",

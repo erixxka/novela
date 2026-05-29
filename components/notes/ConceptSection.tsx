@@ -1,9 +1,61 @@
 import { useEffect, useRef, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
-import { Check } from 'lucide-react-native';
+import { Pressable, Text, TextInput, View } from 'react-native';
+import { Check, Plus, X } from 'lucide-react-native';
 import { useStoryNotes, useUpsertStoryNotes } from '../../lib/queries/notes';
 import { ChipListEditor } from './ChipListEditor';
 import { SectionCard } from './SectionCard';
+
+function TitleListEditor({
+  value,
+  onChange,
+}: {
+  value: string[];
+  onChange: (next: string[]) => void;
+}) {
+  const update = (i: number, text: string) => {
+    const next = [...value];
+    next[i] = text;
+    onChange(next);
+  };
+  const remove = (i: number) => onChange(value.filter((_, idx) => idx !== i));
+  const add = () => onChange([...value, '']);
+
+  return (
+    <View style={{ gap: 6 }}>
+      <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 2.2, textTransform: 'uppercase', color: 'rgba(47,65,86,0.42)' }}>
+        Possible titles
+      </Text>
+      {value.map((t, i) => (
+        <View key={i} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <TextInput
+            value={t}
+            onChangeText={(text) => update(i, text)}
+            placeholder={`Title ${i + 1}…`}
+            placeholderTextColor="rgba(47,65,86,0.35)"
+            style={{
+              flex: 1,
+              fontFamily: 'CormorantGaramond_400Regular',
+              fontSize: 16,
+              color: '#2F4156',
+              borderBottomWidth: 1,
+              borderBottomColor: 'rgba(47,65,86,0.18)',
+              paddingVertical: 6,
+            }}
+          />
+          <Pressable onPress={() => remove(i)} hitSlop={8}>
+            <X size={14} color="rgba(47,65,86,0.35)" />
+          </Pressable>
+        </View>
+      ))}
+      <Pressable onPress={add} style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingTop: 4 }}>
+        <Plus size={13} color="#567C8D" />
+        <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 12, color: '#567C8D' }}>
+          Add another title
+        </Text>
+      </Pressable>
+    </View>
+  );
+}
 
 function FieldLabel({ children }: { children: string }) {
   return (
@@ -134,12 +186,7 @@ export function ConceptSection({ storyId }: { storyId: string }) {
         ) : null
       }
     >
-      <ChipListEditor
-        label="Possible titles"
-        value={titles}
-        onChange={setTitles}
-        placeholder="Add a title…"
-      />
+      <TitleListEditor value={titles} onChange={setTitles} />
       <TextArea
         label="Summary"
         value={summary}

@@ -77,33 +77,21 @@ function SnippetCard({ snippet, onPress }: { snippet: StorySnippetRow; onPress: 
 
 function AddButton({ label, onPress }: { label: string; onPress: () => void }) {
   return (
-    <Pressable
-      onPress={onPress}
-      style={({ pressed }) => ({
+    <Pressable onPress={onPress} style={({ pressed }) => ({ opacity: pressed ? 0.75 : 1 })}>
+      <View style={{
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         gap: 6,
         paddingVertical: 12,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderStyle: 'dashed',
-        borderColor: 'rgba(47,65,86,0.20)',
-        backgroundColor: pressed ? 'rgba(47,65,86,0.04)' : 'transparent',
-      })}
-    >
-      <Plus size={14} color="#567C8D" />
-      <Text
-        style={{
-          fontFamily: 'Inter_500Medium',
-          fontSize: 12,
-          letterSpacing: 1.4,
-          textTransform: 'uppercase',
-          color: '#567C8D',
-        }}
-      >
-        {label}
-      </Text>
+        borderRadius: 999,
+        backgroundColor: '#2F4156',
+      }}>
+        <Plus size={14} color="#F5EFEB" />
+        <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 12, letterSpacing: 1.4, textTransform: 'uppercase', color: '#F5EFEB' }}>
+          {label}
+        </Text>
+      </View>
     </Pressable>
   );
 }

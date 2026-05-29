@@ -3,8 +3,10 @@ import { Linking, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import { Moon, Sun, Smartphone, LogOut, Type, Bell, Lock, Heart, Pencil } from 'lucide-react-native';
+import { Moon, Sun, Smartphone, LogOut, Type, Bell, Lock, Heart, Pencil, Compass } from 'lucide-react-native';
 import { InstagramIcon, FacebookIcon, WattpadIcon } from '../../components/SocialIcons';
+import { CalendarIcon, MusicIcon, MovieIcon } from '../../components/profile/FeatureIcons';
+import { FeatureTile } from '../../components/profile/FeatureTile';
 import { useTheme } from '../../lib/theme';
 import { useAuth } from '../../lib/auth';
 import { useStories } from '../../lib/queries/stories';
@@ -18,13 +20,14 @@ function formatWords(n: number): string {
   return n.toString();
 }
 
-type SettingHref = '/profile-settings?focus=reading' | '/about/privacy' | '/about/contact' | null;
+type SettingHref = '/profile-settings?focus=reading' | '/about/privacy' | '/about/contact' | '/tour' | null;
 
 const SETTINGS: { icon: typeof Type; label: string; sub: string; href: SettingHref }[] = [
-  { icon: Type,  label: 'Reading preferences', sub: 'Font, size, spacing',    href: '/profile-settings?focus=reading' },
-  { icon: Bell,  label: 'Notifications',       sub: 'Daily reminders, off',   href: null },
-  { icon: Lock,  label: 'Privacy',             sub: 'Your work stays private', href: '/about/privacy' },
-  { icon: Heart, label: 'Support Novella',     sub: 'About the maker',         href: '/about/contact' },
+  { icon: Type,    label: 'Reading preferences', sub: 'Font, size, spacing',       href: '/profile-settings?focus=reading' },
+  { icon: Compass, label: 'App tour',            sub: 'A quick look at features',  href: '/tour' },
+  { icon: Bell,    label: 'Notifications',       sub: 'Daily reminders, off',      href: null },
+  { icon: Lock,    label: 'Privacy',             sub: 'Your work stays private',   href: '/about/privacy' },
+  { icon: Heart,   label: 'Support noveḷɑ',      sub: 'About the maker',           href: '/about/contact' },
 ];
 
 export default function ProfileScreen() {
@@ -162,6 +165,13 @@ export default function ProfileScreen() {
               </Text>
             </View>
           ))}
+        </View>
+
+        {/* Feature tiles — Calendar / Music / Movies */}
+        <View style={{ flexDirection: 'row', gap: 10, marginHorizontal: 20, marginTop: 12 }}>
+          <FeatureTile icon={CalendarIcon} label="Calendar" onPress={() => router.push('/calendar')} />
+          <FeatureTile icon={MusicIcon}    label="Music"    onPress={() => router.push('/music')} />
+          <FeatureTile icon={MovieIcon}    label="Movies"   onPress={() => router.push('/movies')} />
         </View>
 
         {/* Appearance */}

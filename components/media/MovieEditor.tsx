@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
-import { Trash2, Users } from 'lucide-react-native';
-import type { StoryCharacterRow } from '../../lib/database.types';
-import type { CharacterInput } from '../../lib/queries/notes';
-
-const ROLES = ['Protagonist', 'Antagonist', 'Supporting', 'Other'] as const;
+import { Film, Trash2 } from 'lucide-react-native';
+import type { MediaMovieRow } from '../../lib/database.types';
+import type { MovieInput } from '../../lib/queries/media';
+import { MediaImagePicker } from './MediaImagePicker';
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -74,7 +73,7 @@ function TextField({
   );
 }
 
-export function CharacterEditor({
+export function MovieEditor({
   visible,
   initial,
   onClose,
@@ -83,59 +82,50 @@ export function CharacterEditor({
   saving,
 }: {
   visible: boolean;
-  initial: StoryCharacterRow | null;
+  initial: MediaMovieRow | null;
   onClose: () => void;
-  onSave: (values: CharacterInput) => void | Promise<void>;
+  onSave: (values: MovieInput) => void | Promise<void>;
   onDelete?: () => void | Promise<void>;
   saving?: boolean;
 }) {
-  const [name, setName] = useState('');
-  const [role, setRole] = useState<string | null>(null);
-  const [age, setAge] = useState('');
-  const [gender, setGender] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [background, setBackground] = useState('');
-  const [appearance, setAppearance] = useState('');
-  const [personality, setPersonality] = useState('');
-  const [goals, setGoals] = useState('');
+  const [title, setTitle] = useState('');
+  const [director, setDirector] = useState('');
+  const [year, setYear] = useState('');
+  const [genre, setGenre] = useState('');
+  const [imagePath, setImagePath] = useState<string | null>(null);
+  const [snippet, setSnippet] = useState('');
 
   useEffect(() => {
     if (!visible) return;
-    setName(initial?.name ?? '');
-    setRole(initial?.role ?? null);
-    setAge(initial?.age ?? '');
-    setGender(initial?.gender ?? '');
-    setOccupation(initial?.occupation ?? '');
-    setBackground(initial?.background ?? '');
-    setAppearance(initial?.appearance ?? '');
-    setPersonality(initial?.personality ?? '');
-    setGoals(initial?.goals ?? '');
+    setTitle(initial?.title ?? '');
+    setDirector(initial?.director ?? '');
+    setYear(initial?.year ?? '');
+    setGenre(initial?.genre ?? '');
+    setImagePath(initial?.image_path ?? null);
+    setSnippet(initial?.snippet ?? '');
   }, [visible, initial]);
 
   const handleSave = () => {
-    const trimmed = name.trim();
+    const trimmed = title.trim();
     if (!trimmed) {
-      Alert.alert('Name required', 'Give this character a name before saving.');
+      Alert.alert('Title required', 'Give this movie a title before saving.');
       return;
     }
     onSave({
-      name: trimmed,
-      role: role,
-      age: age.trim() || null,
-      gender: gender.trim() || null,
-      occupation: occupation.trim() || null,
-      background: background.trim() || null,
-      appearance: appearance.trim() || null,
-      personality: personality.trim() || null,
-      goals: goals.trim() || null,
+      title: trimmed,
+      director: director.trim() || null,
+      year: year.trim() || null,
+      genre: genre.trim() || null,
+      image_path: imagePath,
+      snippet: snippet.trim() || null,
     });
   };
 
   const confirmDelete = () => {
     if (!onDelete || !initial) return;
     Alert.alert(
-      'Delete character?',
-      `"${initial.name}" will be permanently removed.`,
+      'Delete movie?',
+      `"${initial.title}" will be permanently removed.`,
       [
         { text: 'Cancel', style: 'cancel' },
         { text: 'Delete', style: 'destructive', onPress: () => void onDelete() },
@@ -161,7 +151,6 @@ export function CharacterEditor({
             maxHeight: '90%',
           }}
         >
-          {/* Handle */}
           <View
             style={{
               width: 36,
@@ -184,7 +173,7 @@ export function CharacterEditor({
                 justifyContent: 'center',
               }}
             >
-              <Users size={17} color="#567C8D" />
+              <Film size={17} color="#567C8D" />
             </View>
             <Text
               style={{
@@ -193,76 +182,38 @@ export function CharacterEditor({
                 color: '#2F4156',
               }}
             >
-              {initial ? 'Edit character' : 'New character'}
+              {initial ? 'Edit movie' : 'New movie'}
             </Text>
           </View>
 
           <ScrollView showsVerticalScrollIndicator={false}>
-            <TextField label="Name" value={name} onChangeText={setName} required autoFocus />
-
-            <View style={{ marginBottom: 14 }}>
-              <FieldLabel>Role</FieldLabel>
-              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, alignItems: 'flex-start' }}>
-                {ROLES.map((r) => {
-                  const active = role === r;
-                  return (
-                    <Pressable
-                      key={r}
-                      onPress={() => setRole(active ? null : r)}
-                      style={{
-                        paddingHorizontal: 12,
-                        paddingVertical: 6,
-                        borderRadius: 999,
-                        backgroundColor: active ? '#2F4156' : 'rgba(47,65,86,0.06)',
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontFamily: 'Inter_500Medium',
-                          fontSize: 12,
-                          color: active ? '#F5EFEB' : 'rgba(47,65,86,0.65)',
-                        }}
-                      >
-                        {r}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </View>
+            <View style={{ alignItems: 'center', marginBottom: 18 }}>
+              <MediaImagePicker
+                value={imagePath}
+                onChange={setImagePath}
+                kind="movies"
+                aspect={[2, 3]}
+              />
             </View>
 
+            <TextField label="Title" value={title} onChangeText={setTitle} required autoFocus />
+            <TextField label="Director" value={director} onChangeText={setDirector} />
             <View style={{ flexDirection: 'row', gap: 10 }}>
               <View style={{ flex: 1 }}>
-                <TextField label="Age" value={age} onChangeText={setAge} placeholder="e.g. 27" />
+                <TextField label="Year" value={year} onChangeText={setYear} placeholder="e.g. 1994" />
               </View>
               <View style={{ flex: 1 }}>
-                <TextField label="Gender" value={gender} onChangeText={setGender} />
+                <TextField label="Genre" value={genre} onChangeText={setGenre} />
               </View>
             </View>
-
-            <TextField label="Occupation" value={occupation} onChangeText={setOccupation} />
             <TextField
-              label="Background"
-              value={background}
-              onChangeText={setBackground}
+              label="Favorite quote / notes"
+              value={snippet}
+              onChangeText={setSnippet}
               multiline
-              minHeight={80}
+              minHeight={120}
+              placeholder="A line that stays with you…"
             />
-            <TextField
-              label="Appearance"
-              value={appearance}
-              onChangeText={setAppearance}
-              multiline
-              minHeight={60}
-            />
-            <TextField
-              label="Personality"
-              value={personality}
-              onChangeText={setPersonality}
-              multiline
-              minHeight={60}
-            />
-            <TextField label="Goals" value={goals} onChangeText={setGoals} multiline minHeight={60} />
           </ScrollView>
 
           <View style={{ gap: 10, marginTop: 12 }}>
@@ -334,7 +285,7 @@ export function CharacterEditor({
                     color: '#C4534A',
                   }}
                 >
-                  Delete character
+                  Delete movie
                 </Text>
               </Pressable>
             ) : null}

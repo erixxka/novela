@@ -73,6 +73,10 @@ function RootStack() {
         <Stack.Screen name="story/[id]/chapter/[chapterId]/read" />
         <Stack.Screen name="story/[id]/chapter/[chapterId]/edit" />
         <Stack.Screen name="notes/[storyId]" />
+        <Stack.Screen name="calendar" />
+        <Stack.Screen name="music" />
+        <Stack.Screen name="movies" />
+        <Stack.Screen name="tour" options={{ presentation: 'fullScreenModal' }} />
         <Stack.Screen name="profile-settings" options={{ presentation: 'modal' }} />
         <Stack.Screen name="about/novella" />
         <Stack.Screen name="about/maker" />

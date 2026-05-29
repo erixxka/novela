@@ -9,7 +9,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { ChevronLeft } from 'lucide-react-native';
-import type { EditorBridge } from '@10play/tentap-editor';
 import {
   useChapter,
   useDeleteChapter,
@@ -19,6 +18,16 @@ import { RichTextEditor } from '../../../../../components/RichTextEditor';
 
 const SAVE_DEBOUNCE_MS = 3000;
 
+function textToTipTap(text: string): Record<string, unknown> {
+  return {
+    type: 'doc',
+    content: text.split('\n').map((line) => ({
+      type: 'paragraph',
+      content: line ? [{ type: 'text', text: line }] : [],
+    })),
+  };
+}
+
 export default function EditChapterScreen() {
   const { id, chapterId } = useLocalSearchParams<{ id: string; chapterId: string }>();
   const router = useRouter();
@@ -27,47 +36,36 @@ export default function EditChapterScreen() {
   const remove = useDeleteChapter(id!);
 
   const [title, setTitle] = useState('');
-  const [editor, setEditor] = useState<EditorBridge | null>(null);
+  const [body, setBody] = useState('');
   const [status, setStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastSaved = useRef('');
 
   useEffect(() => {
-    if (chapter) setTitle(chapter.title);
+    if (!chapter) return;
+    setTitle(chapter.title);
+    const text = chapter.content_text ?? '';
+    setBody(text);
+    lastSaved.current = text;
   }, [chapter]);
 
-  const queueSave = () => {
+  const queueSave = (currentTitle: string, currentBody: string) => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     setStatus('saving');
     saveTimer.current = setTimeout(async () => {
-      if (!editor) return;
       try {
-        const [json, text] = await Promise.all([
-          editor.getJSON(),
-          editor.getText(),
-        ]);
         await update.mutateAsync({
-          title: title.trim() || 'Untitled chapter',
-          content: (json as Record<string, unknown>) ?? {},
-          content_text: text ?? '',
+          title: currentTitle.trim() || 'Untitled chapter',
+          content: textToTipTap(currentBody),
+          content_text: currentBody,
         });
+        lastSaved.current = currentBody;
         setStatus('saved');
       } catch {
         setStatus('idle');
       }
     }, SAVE_DEBOUNCE_MS);
   };
-
-  useEffect(() => {
-    if (!editor) return;
-    const interval = setInterval(async () => {
-      const text = await editor.getText();
-      if (text !== chapter?.content_text) {
-        queueSave();
-      }
-    }, 4000);
-    return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editor, chapter?.content_text, title]);
 
   useEffect(() => {
     return () => {
@@ -77,16 +75,10 @@ export default function EditChapterScreen() {
 
   const saveNow = async () => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
-    if (!editor) {
-      await update.mutateAsync({ title: title.trim() || 'Untitled chapter' });
-      router.back();
-      return;
-    }
-    const [json, text] = await Promise.all([editor.getJSON(), editor.getText()]);
     await update.mutateAsync({
       title: title.trim() || 'Untitled chapter',
-      content: (json as Record<string, unknown>) ?? {},
-      content_text: text ?? '',
+      content: textToTipTap(body),
+      content_text: body,
     });
     router.back();
   };
@@ -133,7 +125,7 @@ export default function EditChapterScreen() {
           value={title}
           onChangeText={(t) => {
             setTitle(t);
-            queueSave();
+            queueSave(t, body);
           }}
           placeholder="Chapter title"
           placeholderTextColor="rgba(47,65,86,0.35)"
@@ -144,12 +136,13 @@ export default function EditChapterScreen() {
         />
       </View>
 
-      <View style={{ flex: 1 }}>
-        <RichTextEditor
-          initialContent={(chapter.content as Record<string, unknown>) ?? null}
-          onReady={setEditor}
-        />
-      </View>
+      <RichTextEditor
+        value={body}
+        onChange={(text) => {
+          setBody(text);
+          queueSave(title, text);
+        }}
+      />
     </SafeAreaView>
   );
 }

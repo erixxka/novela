@@ -78,25 +78,27 @@ export default function AboutMakerScreen() {
         {/* Contact CTA */}
         <Pressable
           onPress={() => Linking.openURL('mailto:erickadichon@gmail.com')}
-          style={({ pressed }) => ({
+          style={({ pressed }) => ({ opacity: pressed ? 0.7 : 1 })}
+        >
+          <View style={{
             marginHorizontal: 20,
             backgroundColor: '#FAF6F2',
             borderRadius: 16, borderWidth: 1, borderColor: 'rgba(47,65,86,0.10)',
             paddingVertical: 16, paddingHorizontal: 20,
-            flexDirection: 'row', alignItems: 'center', gap: 14,
-            opacity: pressed ? 0.7 : 1,
-          })}
-        >
-          <View style={{
-            width: 36, height: 36, borderRadius: 10,
-            backgroundColor: 'rgba(86,124,141,0.10)',
-            alignItems: 'center', justifyContent: 'center',
+            flexDirection: 'row', alignItems: 'center',
           }}>
-            <Mail size={17} color="#567C8D" />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Text style={{ fontFamily: 'Inter_400Regular', fontSize: 14, color: '#2F4156' }}>Say hello</Text>
-            <Text style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: 'rgba(47,65,86,0.42)', marginTop: 1 }}>erickadichon@gmail.com</Text>
+            <View style={{
+              width: 36, height: 36, borderRadius: 10,
+              backgroundColor: 'rgba(86,124,141,0.10)',
+              alignItems: 'center', justifyContent: 'center',
+              marginRight: 14,
+            }}>
+              <Mail size={17} color="#567C8D" />
+            </View>
+            <View style={{ flex: 1 }}>
+              <Text style={{ fontFamily: 'Inter_400Regular', fontSize: 14, color: '#2F4156' }}>Say hello</Text>
+              <Text style={{ fontFamily: 'Inter_400Regular', fontSize: 11, color: 'rgba(47,65,86,0.42)', marginTop: 1 }}>erickadichon@gmail.com</Text>
+            </View>
           </View>
         </Pressable>
 

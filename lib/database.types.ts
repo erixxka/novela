@@ -104,6 +104,34 @@ export interface StorySnippetRow {
   updated_at: string;
 }
 
+export interface MediaSongRow {
+  id: string;
+  user_id: string;
+  title: string;
+  artist: string | null;
+  year: string | null;
+  genre: string | null;
+  image_path: string | null;
+  lyrics_snippet: string | null;
+  is_favorite: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MediaMovieRow {
+  id: string;
+  user_id: string;
+  title: string;
+  director: string | null;
+  year: string | null;
+  genre: string | null;
+  image_path: string | null;
+  snippet: string | null;
+  is_favorite: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface SearchResultRow {
   story_id: string;
   story_title: string;
@@ -184,6 +212,24 @@ export interface Database {
           updated_at?: string;
         };
         Update: Partial<Omit<StorySnippetRow, 'id' | 'story_id' | 'user_id'>>;
+      };
+      media_songs: {
+        Row: MediaSongRow;
+        Insert: Omit<MediaSongRow, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Omit<MediaSongRow, 'id' | 'user_id'>>;
+      };
+      media_movies: {
+        Row: MediaMovieRow;
+        Insert: Omit<MediaMovieRow, 'id' | 'created_at' | 'updated_at'> & {
+          id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Omit<MediaMovieRow, 'id' | 'user_id'>>;
       };
     };
     Functions: {

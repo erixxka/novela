@@ -1,46 +1,42 @@
-import { useEffect } from 'react';
-import { KeyboardAvoidingView, Platform, View } from 'react-native';
-import {
-  RichText,
-  Toolbar,
-  useEditorBridge,
-  type EditorBridge,
-} from '@10play/tentap-editor';
+import { KeyboardAvoidingView, Platform, ScrollView, TextInput, View } from 'react-native';
 
-type RichTextEditorProps = {
-  initialContent?: Record<string, unknown> | null;
-  onReady?: (editor: EditorBridge) => void;
+type Props = {
+  value: string;
+  onChange: (text: string) => void;
   editable?: boolean;
 };
 
-export function RichTextEditor({
-  initialContent,
-  onReady,
-  editable = true,
-}: RichTextEditorProps) {
-  const editor: EditorBridge = useEditorBridge({
-    autofocus: false,
-    avoidIosKeyboard: true,
-    initialContent: (initialContent as any) ?? undefined,
-    editable,
-    editorStyle: 'body { padding: 0 20px 24px; } p { margin: 0; padding: 6px 0; }',
-  });
-
-  useEffect(() => {
-    onReady?.(editor);
-  }, [editor, onReady]);
-
+export function RichTextEditor({ value, onChange, editable = true }: Props) {
   return (
-    <View className="flex-1">
-      <RichText editor={editor} />
-      {editable ? (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          keyboardVerticalOffset={Platform.OS === 'ios' ? 88 : 0}
-        >
-          <Toolbar editor={editor} />
-        </KeyboardAvoidingView>
-      ) : null}
-    </View>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 88 : 0}
+    >
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 20, paddingBottom: 48 }}
+        keyboardDismissMode="interactive"
+        showsVerticalScrollIndicator={false}
+      >
+        <TextInput
+          value={value}
+          onChangeText={onChange}
+          editable={editable}
+          multiline
+          scrollEnabled={false}
+          placeholder="Begin writing…"
+          placeholderTextColor="rgba(47,65,86,0.30)"
+          textAlignVertical="top"
+          style={{
+            fontFamily: 'CormorantGaramond_400Regular',
+            fontSize: 18,
+            lineHeight: 30,
+            color: '#2F4156',
+            minHeight: 400,
+          }}
+        />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

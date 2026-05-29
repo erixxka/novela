@@ -15,7 +15,7 @@ const STEPS = [
   {
     eyebrow: 'Welcome',
     title: 'A quiet place to\nread and write',
-    body: 'Novella holds your manuscripts and your reading list side by side — one identity, two modes. No streaks shouting at you. Just the work, and the books you love.',
+    body: 'noveḷɑ holds your manuscripts and your reading list side by side — one identity, two modes. No streaks shouting at you. Just the work, and the books you love.',
     art: 'pages' as const,
     bg: '#C8D9E6',
   },
@@ -69,8 +69,8 @@ export default function OnboardingScreen() {
         >
           {/* Top bar */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', height: 44 }}>
-            <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 2.2, textTransform: 'uppercase', color: 'rgba(47,65,86,0.42)' }}>
-              Novella
+            <Text style={{ fontFamily: 'CormorantGlyphs_400Regular', fontSize: 18, color: 'rgba(47,65,86,0.55)' }}>
+              {'noveḷɑ'}
             </Text>
             {step < STEPS.length - 1 && (
               <Pressable onPress={finish}>
