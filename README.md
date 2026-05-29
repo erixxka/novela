@@ -1,6 +1,6 @@
 # Novella
 
-A private, single-user writing and reading app — Wattpad for an audience of one. Built with Expo + React Native + Supabase.
+A private, single-user writing and reading app for an audience of one. Built with Expo + React Native + Supabase.
 
 ## What's in v1
 
