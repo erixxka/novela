@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npx --version)",
+      "Bash(npm install *)",
+      "Bash(npx expo *)",
+      "Bash(node -e ' *)",
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\Ericka Dichon\\\\Downloads\\\\Novella App\" -Recurse)",
+      "Bash(Select-Object FullName, Length)",
+      "PowerShell(npm run typecheck)"
+    ]
+  }
+}

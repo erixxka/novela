@@ -1,0 +1,59 @@
+{
+  "expo": {
+    "name": "Novella",
+    "slug": "novella",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "novella",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "icon": "./assets/images/icon.png",
+    "splash": {
+      "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F5EFEB"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.erickadichon.novella"
+    },
+    "android": {
+      "icon": "./assets/images/icon.png",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#2F4156"
+      },
+      "package": "com.erickadichon.novella",
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Novella needs access to your photos so you can pick a cover image for your stories."
+        }
+      ],
+      "expo-asset",
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "923d7cca-67c9-458e-a642-a2103f786364"
+      }
+    },
+    "owner": "mariaericka"
+  }
+}
