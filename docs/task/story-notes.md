@@ -1,4 +1,4 @@
-# Story Notes
+# Story Notes/Writing Prompts
 
 > **Status:** TESTING
 > **Priority:** HIGH
@@ -10,6 +10,7 @@
 > **Automation:** manual
 >
 > **Implementation Notes:**
+>
 > - Run `supabase/migrations/0006_story_notes.sql` in the Supabase SQL editor before testing — the client will fail until the three tables exist.
 > - Concept section auto-saves with an 800ms debounce; a "Saved" indicator appears beside the section header for ~4s after each save. On first load the concept row gets one redundant upsert (only refreshes `updated_at`).
 > - The existing Supabase typing tech debt produces `tsc` errors in `lib/queries/notes.ts` matching the same pattern as `chapters.ts` / `stories.ts` (chained client resolves to `never`). Result types are cast to the proper row types. Out of scope per task notes.
@@ -22,6 +23,7 @@ Replace the Notes tab placeholder with a real workspace where Ericka can plan an
 ## Requirements
 
 ### Must Have
+
 - [ ] Notes tab hub lists every novel with note counts (characters · snippets · whether concept is filled in)
 - [ ] `noveḷɑ` brand mark (CormorantGlyphs) at the top of the Notes hub and at the top of each story's notes page
 - [ ] Per-story notes page at `/notes/[storyId]` with three collapsible sections
@@ -42,6 +44,7 @@ Replace the Notes tab placeholder with a real workspace where Ericka can plan an
 - [ ] Notes hub "back to library" empty state if the user has zero stories
 
 ### Nice to Have
+
 - [ ] Search across all snippets/characters/concept fields
 - [ ] Character avatar/initials tile (color tone matches story cover tone)
 - [ ] Reorder characters via long-press drag
@@ -52,17 +55,17 @@ Replace the Notes tab placeholder with a real workspace where Ericka can plan an
 
 ## Current State
 
-The Notes tab at [app/(tabs)/notes.tsx](app/(tabs)/notes.tsx) renders three hard-coded placeholder cards (Characters, World, Plot) and a "coming soon" panel. There is no underlying data layer. Story selection happens only via the Library; stories themselves have no attached "notes" concept yet.
+The Notes tab at [app/(tabs)/notes.tsx](<app/(tabs)/notes.tsx>) renders three hard-coded placeholder cards (Characters, World, Plot) and a "coming soon" panel. There is no underlying data layer. Story selection happens only via the Library; stories themselves have no attached "notes" concept yet.
 
 **Current Files:**
 
-| File | Purpose |
-|------|---------|
-| [app/(tabs)/notes.tsx](app/(tabs)/notes.tsx) | Placeholder Notes screen — to be replaced |
-| [app/(tabs)/_layout.tsx](app/(tabs)/_layout.tsx) | Tab bar — Notes tab already wired with `PenLine` icon |
-| [lib/database.types.ts](lib/database.types.ts) | Database row types (no notes types yet) |
-| [lib/queries/stories.ts](lib/queries/stories.ts) | `useStories`, `useStory` — used by the hub to list novels |
-| [supabase/migrations/](supabase/migrations/) | Migrations directory — already contains 0001–0005 |
+| File                                                | Purpose                                                   |
+| --------------------------------------------------- | --------------------------------------------------------- |
+| [app/(tabs)/notes.tsx](<app/(tabs)/notes.tsx>)      | Placeholder Notes screen — to be replaced                 |
+| [app/(tabs)/\_layout.tsx](<app/(tabs)/_layout.tsx>) | Tab bar — Notes tab already wired with `PenLine` icon     |
+| [lib/database.types.ts](lib/database.types.ts)      | Database row types (no notes types yet)                   |
+| [lib/queries/stories.ts](lib/queries/stories.ts)    | `useStories`, `useStory` — used by the hub to list novels |
+| [supabase/migrations/](supabase/migrations/)        | Migrations directory — already contains 0001–0005         |
 
 ## Proposed Solution
 
@@ -100,67 +103,67 @@ app/notes/[storyId].tsx
 
 **`story_notes`** — one row per story (1:1)
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `story_id` | uuid PK | FK → stories.id ON DELETE CASCADE |
-| `user_id` | uuid | FK → auth.users; redundant with story.user_id but lets RLS check directly |
-| `possible_titles` | text[] | Default `'{}'` |
-| `summary` | text | Default `''` |
-| `outline` | text | Default `''` |
-| `genres` | text[] | Default `'{}'` |
-| `themes` | text[] | Default `'{}'` |
-| `updated_at` | timestamptz | Default `now()` |
+| Column            | Type        | Notes                                                                     |
+| ----------------- | ----------- | ------------------------------------------------------------------------- |
+| `story_id`        | uuid PK     | FK → stories.id ON DELETE CASCADE                                         |
+| `user_id`         | uuid        | FK → auth.users; redundant with story.user_id but lets RLS check directly |
+| `possible_titles` | text[]      | Default `'{}'`                                                            |
+| `summary`         | text        | Default `''`                                                              |
+| `outline`         | text        | Default `''`                                                              |
+| `genres`          | text[]      | Default `'{}'`                                                            |
+| `themes`          | text[]      | Default `'{}'`                                                            |
+| `updated_at`      | timestamptz | Default `now()`                                                           |
 
 **`story_characters`** — one row per character (1:many)
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | `gen_random_uuid()` |
-| `story_id` | uuid | FK → stories.id ON DELETE CASCADE |
-| `user_id` | uuid | FK → auth.users |
-| `name` | text NOT NULL | |
-| `role` | text | nullable; e.g. 'Protagonist' |
-| `age` | text | text, not int — allows "early 20s", "ancient" |
-| `gender` | text | nullable |
-| `occupation` | text | nullable |
-| `background` | text | nullable |
-| `appearance` | text | nullable |
-| `personality` | text | nullable |
-| `goals` | text | nullable |
-| `order_index` | int | Default 0 — for future drag reorder |
-| `created_at`/`updated_at` | timestamptz | |
+| Column                    | Type          | Notes                                         |
+| ------------------------- | ------------- | --------------------------------------------- |
+| `id`                      | uuid PK       | `gen_random_uuid()`                           |
+| `story_id`                | uuid          | FK → stories.id ON DELETE CASCADE             |
+| `user_id`                 | uuid          | FK → auth.users                               |
+| `name`                    | text NOT NULL |                                               |
+| `role`                    | text          | nullable; e.g. 'Protagonist'                  |
+| `age`                     | text          | text, not int — allows "early 20s", "ancient" |
+| `gender`                  | text          | nullable                                      |
+| `occupation`              | text          | nullable                                      |
+| `background`              | text          | nullable                                      |
+| `appearance`              | text          | nullable                                      |
+| `personality`             | text          | nullable                                      |
+| `goals`                   | text          | nullable                                      |
+| `order_index`             | int           | Default 0 — for future drag reorder           |
+| `created_at`/`updated_at` | timestamptz   |                                               |
 
 **`story_snippets`** — one row per snippet (1:many)
 
-| Column | Type | Notes |
-|--------|------|-------|
-| `id` | uuid PK | `gen_random_uuid()` |
-| `story_id` | uuid | FK → stories.id ON DELETE CASCADE |
-| `user_id` | uuid | FK → auth.users |
-| `kind` | text NOT NULL | Check constraint: `('note','quote','dialogue','outline','prompt')`. Default `'note'` |
-| `title` | text | Optional |
-| `body` | text NOT NULL | |
-| `order_index` | int | Default 0 |
-| `created_at`/`updated_at` | timestamptz | |
+| Column                    | Type          | Notes                                                                                |
+| ------------------------- | ------------- | ------------------------------------------------------------------------------------ |
+| `id`                      | uuid PK       | `gen_random_uuid()`                                                                  |
+| `story_id`                | uuid          | FK → stories.id ON DELETE CASCADE                                                    |
+| `user_id`                 | uuid          | FK → auth.users                                                                      |
+| `kind`                    | text NOT NULL | Check constraint: `('note','quote','dialogue','outline','prompt')`. Default `'note'` |
+| `title`                   | text          | Optional                                                                             |
+| `body`                    | text NOT NULL |                                                                                      |
+| `order_index`             | int           | Default 0                                                                            |
+| `created_at`/`updated_at` | timestamptz   |                                                                                      |
 
 **RLS** for all three tables: owner via `auth.uid() = user_id`. Indexes on `story_id` for the list tables.
 
 ### File Changes
 
-| Action | File | Description |
-|--------|------|-------------|
-| CREATE | `supabase/migrations/0006_story_notes.sql` | The three tables, indexes, RLS policies |
-| MODIFY | `lib/database.types.ts` | Add `StoryNotesRow`, `StoryCharacterRow`, `StorySnippetRow`, register in `Database` |
-| CREATE | `lib/queries/notes.ts` | Hooks: `useStoryNotes`, `useUpsertStoryNotes`, `useCharacters`, `useCreateCharacter`, `useUpdateCharacter`, `useDeleteCharacter`, `useSnippets`, `useCreateSnippet`, `useUpdateSnippet`, `useDeleteSnippet`, plus `useNoteCounts` for the hub |
-| MODIFY | `app/(tabs)/notes.tsx` | Replace placeholder with Notes hub: brand mark + list of novels with counts |
-| CREATE | `app/notes/[storyId].tsx` | Per-story notes screen, three sections |
-| CREATE | `components/notes/ConceptSection.tsx` | Section 1 UI (titles / summary / outline / genres / themes) |
-| CREATE | `components/notes/CharactersSection.tsx` | Section 2 UI (list + add button + sheet trigger) |
-| CREATE | `components/notes/SnippetsSection.tsx` | Section 3 UI (list + add button + sheet trigger) |
-| CREATE | `components/notes/CharacterEditor.tsx` | Bottom-sheet modal for create/edit character |
-| CREATE | `components/notes/SnippetEditor.tsx` | Bottom-sheet modal for create/edit snippet |
-| CREATE | `components/notes/ChipListEditor.tsx` | Reusable add-and-remove chip input (titles, genres, themes) |
-| CREATE | `components/notes/SectionCard.tsx` | Shared wrapper card with collapse toggle + section header |
+| Action | File                                       | Description                                                                                                                                                                                                                                   |
+| ------ | ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| CREATE | `supabase/migrations/0006_story_notes.sql` | The three tables, indexes, RLS policies                                                                                                                                                                                                       |
+| MODIFY | `lib/database.types.ts`                    | Add `StoryNotesRow`, `StoryCharacterRow`, `StorySnippetRow`, register in `Database`                                                                                                                                                           |
+| CREATE | `lib/queries/notes.ts`                     | Hooks: `useStoryNotes`, `useUpsertStoryNotes`, `useCharacters`, `useCreateCharacter`, `useUpdateCharacter`, `useDeleteCharacter`, `useSnippets`, `useCreateSnippet`, `useUpdateSnippet`, `useDeleteSnippet`, plus `useNoteCounts` for the hub |
+| MODIFY | `app/(tabs)/notes.tsx`                     | Replace placeholder with Notes hub: brand mark + list of novels with counts                                                                                                                                                                   |
+| CREATE | `app/notes/[storyId].tsx`                  | Per-story notes screen, three sections                                                                                                                                                                                                        |
+| CREATE | `components/notes/ConceptSection.tsx`      | Section 1 UI (titles / summary / outline / genres / themes)                                                                                                                                                                                   |
+| CREATE | `components/notes/CharactersSection.tsx`   | Section 2 UI (list + add button + sheet trigger)                                                                                                                                                                                              |
+| CREATE | `components/notes/SnippetsSection.tsx`     | Section 3 UI (list + add button + sheet trigger)                                                                                                                                                                                              |
+| CREATE | `components/notes/CharacterEditor.tsx`     | Bottom-sheet modal for create/edit character                                                                                                                                                                                                  |
+| CREATE | `components/notes/SnippetEditor.tsx`       | Bottom-sheet modal for create/edit snippet                                                                                                                                                                                                    |
+| CREATE | `components/notes/ChipListEditor.tsx`      | Reusable add-and-remove chip input (titles, genres, themes)                                                                                                                                                                                   |
+| CREATE | `components/notes/SectionCard.tsx`         | Shared wrapper card with collapse toggle + section header                                                                                                                                                                                     |
 
 ## Implementation Steps
 
@@ -245,7 +248,7 @@ create policy "story_snippets_owner" on public.story_snippets
 Update [lib/database.types.ts](lib/database.types.ts):
 
 ```ts
-export type SnippetKind = 'note' | 'quote' | 'dialogue' | 'outline' | 'prompt';
+export type SnippetKind = "note" | "quote" | "dialogue" | "outline" | "prompt";
 
 export interface StoryNotesRow {
   story_id: string;
@@ -296,40 +299,58 @@ Register all three in the `Database` interface, matching the pattern used for `r
 Create `lib/queries/notes.ts`:
 
 ```ts
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../supabase';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "../supabase";
 import type {
   StoryNotesRow,
   StoryCharacterRow,
   StorySnippetRow,
   SnippetKind,
-} from '../database.types';
+} from "../database.types";
 
 const keys = {
-  notes:      (storyId: string) => ['story_notes', storyId] as const,
-  characters: (storyId: string) => ['story_characters', storyId] as const,
-  snippets:   (storyId: string) => ['story_snippets', storyId] as const,
-  counts:     ['story_notes', 'counts'] as const,
+  notes: (storyId: string) => ["story_notes", storyId] as const,
+  characters: (storyId: string) => ["story_characters", storyId] as const,
+  snippets: (storyId: string) => ["story_snippets", storyId] as const,
+  counts: ["story_notes", "counts"] as const,
 };
 
 // ── Concept / story_notes ────────────────────────────────────────────────
-export function useStoryNotes(storyId: string | undefined) { /* maybeSingle() */ }
+export function useStoryNotes(storyId: string | undefined) {
+  /* maybeSingle() */
+}
 export function useUpsertStoryNotes() {
   // Upsert by story_id; always include user_id from auth.getUser().
   // Cast result to StoryNotesRow.
 }
 
 // ── Characters ────────────────────────────────────────────────────────────
-export function useCharacters(storyId: string | undefined) { /* order by order_index, created_at */ }
-export function useCreateCharacter(storyId: string)        { /* invalidate characters + counts */ }
-export function useUpdateCharacter(storyId: string)        { /* by id */ }
-export function useDeleteCharacter(storyId: string)        { /* by id */ }
+export function useCharacters(storyId: string | undefined) {
+  /* order by order_index, created_at */
+}
+export function useCreateCharacter(storyId: string) {
+  /* invalidate characters + counts */
+}
+export function useUpdateCharacter(storyId: string) {
+  /* by id */
+}
+export function useDeleteCharacter(storyId: string) {
+  /* by id */
+}
 
 // ── Snippets ──────────────────────────────────────────────────────────────
-export function useSnippets(storyId: string | undefined)   { /* order by order_index, created_at desc */ }
-export function useCreateSnippet(storyId: string)          { /* invalidate snippets + counts */ }
-export function useUpdateSnippet(storyId: string)          { /* by id */ }
-export function useDeleteSnippet(storyId: string)          { /* by id */ }
+export function useSnippets(storyId: string | undefined) {
+  /* order by order_index, created_at desc */
+}
+export function useCreateSnippet(storyId: string) {
+  /* invalidate snippets + counts */
+}
+export function useUpdateSnippet(storyId: string) {
+  /* by id */
+}
+export function useDeleteSnippet(storyId: string) {
+  /* by id */
+}
 
 // ── Hub counts (one query, joined client-side) ───────────────────────────
 export function useNoteCounts() {
@@ -350,22 +371,28 @@ Create `components/notes/ChipListEditor.tsx`:
 
 ```tsx
 export function ChipListEditor({
-  label, value, onChange, placeholder = 'Add…',
+  label,
+  value,
+  onChange,
+  placeholder = "Add…",
 }: {
   label: string;
   value: string[];
   onChange: (next: string[]) => void;
   placeholder?: string;
 }) {
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useState("");
   const add = () => {
     const t = draft.trim();
     if (!t) return;
-    if (value.includes(t)) { setDraft(''); return; }
+    if (value.includes(t)) {
+      setDraft("");
+      return;
+    }
     onChange([...value, t]);
-    setDraft('');
+    setDraft("");
   };
-  const remove = (chip: string) => onChange(value.filter(c => c !== chip));
+  const remove = (chip: string) => onChange(value.filter((c) => c !== chip));
   // …chips row + TextInput with returnKeyType="done" and onSubmitEditing={add}
 }
 ```
@@ -438,26 +465,71 @@ export default function StoryNotesScreen() {
   const { data: story } = useStory(storyId);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#F5EFEB' }} edges={['top']}>
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: "#F5EFEB" }}
+      edges={["top"]}
+    >
       {/* Back + brand */}
-      <View style={{ paddingHorizontal: 12, paddingTop: 8, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Pressable onPress={() => router.back()} style={{ width: 40, height: 40, alignItems: 'center', justifyContent: 'center' }}>
+      <View
+        style={{
+          paddingHorizontal: 12,
+          paddingTop: 8,
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Pressable
+          onPress={() => router.back()}
+          style={{
+            width: 40,
+            height: 40,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <ArrowLeft size={20} color="rgba(47,65,86,0.65)" />
         </Pressable>
-        <Text style={{ fontFamily: 'CormorantGlyphs_400Regular', fontSize: 26, color: '#2F4156' }}>
-          {'noveḷɑ'}
+        <Text
+          style={{
+            fontFamily: "CormorantGlyphs_400Regular",
+            fontSize: 26,
+            color: "#2F4156",
+          }}
+        >
+          {"noveḷɑ"}
         </Text>
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 48 }} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={{ paddingBottom: 48 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Story header */}
-        <View style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16 }}>
-          <Text style={{ fontFamily: 'Inter_500Medium', fontSize: 10, letterSpacing: 2.2, textTransform: 'uppercase', color: 'rgba(47,65,86,0.42)' }}>
+        <View
+          style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 16 }}
+        >
+          <Text
+            style={{
+              fontFamily: "Inter_500Medium",
+              fontSize: 10,
+              letterSpacing: 2.2,
+              textTransform: "uppercase",
+              color: "rgba(47,65,86,0.42)",
+            }}
+          >
             Notes for
           </Text>
-          <Text style={{ fontFamily: 'CormorantGaramond_500Medium', fontSize: 30, color: '#2F4156', lineHeight: 34 }}>
-            {story?.title ?? '…'}
+          <Text
+            style={{
+              fontFamily: "CormorantGaramond_500Medium",
+              fontSize: 30,
+              color: "#2F4156",
+              lineHeight: 34,
+            }}
+          >
+            {story?.title ?? "…"}
           </Text>
         </View>
 
@@ -477,8 +549,8 @@ function ConceptSection({ storyId }: { storyId: string }) {
   const { data, isLoading } = useStoryNotes(storyId);
   const upsert = useUpsertStoryNotes();
   const [titles, setTitles] = useState<string[]>([]);
-  const [summary, setSummary] = useState('');
-  const [outline, setOutline] = useState('');
+  const [summary, setSummary] = useState("");
+  const [outline, setOutline] = useState("");
   const [genres, setGenres] = useState<string[]>([]);
   const [themes, setThemes] = useState<string[]>([]);
 
@@ -495,16 +567,38 @@ function ConceptSection({ storyId }: { storyId: string }) {
   // Debounced auto-save
   useEffect(() => {
     const t = setTimeout(() => {
-      upsert.mutate({ storyId, possible_titles: titles, summary, outline, genres, themes });
+      upsert.mutate({
+        storyId,
+        possible_titles: titles,
+        summary,
+        outline,
+        genres,
+        themes,
+      });
     }, 800);
     return () => clearTimeout(t);
   }, [titles, summary, outline, genres, themes]);
 
   return (
     <SectionCard title="Outline & Concept" eyebrow="Section one">
-      <ChipListEditor label="Possible titles" value={titles} onChange={setTitles} placeholder="Add a title…" />
-      <TextArea label="Summary"  value={summary} onChangeText={setSummary} minHeight={80} />
-      <TextArea label="Outline"  value={outline} onChangeText={setOutline} minHeight={160} />
+      <ChipListEditor
+        label="Possible titles"
+        value={titles}
+        onChange={setTitles}
+        placeholder="Add a title…"
+      />
+      <TextArea
+        label="Summary"
+        value={summary}
+        onChangeText={setSummary}
+        minHeight={80}
+      />
+      <TextArea
+        label="Outline"
+        value={outline}
+        onChangeText={setOutline}
+        minHeight={160}
+      />
       <ChipListEditor label="Genres" value={genres} onChange={setGenres} />
       <ChipListEditor label="Themes" value={themes} onChange={setThemes} />
     </SectionCard>
@@ -519,30 +613,55 @@ function ConceptSection({ storyId }: { storyId: string }) {
 ```tsx
 function CharactersSection({ storyId }: { storyId: string }) {
   const { data: characters } = useCharacters(storyId);
-  const [editing, setEditing] = useState<StoryCharacterRow | 'new' | null>(null);
+  const [editing, setEditing] = useState<StoryCharacterRow | "new" | null>(
+    null,
+  );
   const createCharacter = useCreateCharacter(storyId);
   const updateCharacter = useUpdateCharacter(storyId);
   const deleteCharacter = useDeleteCharacter(storyId);
 
   return (
-    <SectionCard title="Characters" eyebrow="Section two" count={characters?.length}>
-      {characters?.length
-        ? characters.map(c => (
-            <CharacterCard key={c.id} character={c} onPress={() => setEditing(c)} />
-          ))
-        : <EmptyRow icon={Users} text="Add your first character" onPress={() => setEditing('new')} />}
-      <AddButton label="Add character" onPress={() => setEditing('new')} />
+    <SectionCard
+      title="Characters"
+      eyebrow="Section two"
+      count={characters?.length}
+    >
+      {characters?.length ? (
+        characters.map((c) => (
+          <CharacterCard
+            key={c.id}
+            character={c}
+            onPress={() => setEditing(c)}
+          />
+        ))
+      ) : (
+        <EmptyRow
+          icon={Users}
+          text="Add your first character"
+          onPress={() => setEditing("new")}
+        />
+      )}
+      <AddButton label="Add character" onPress={() => setEditing("new")} />
 
       {editing ? (
         <CharacterEditor
-          initial={editing === 'new' ? null : editing}
+          initial={editing === "new" ? null : editing}
           onClose={() => setEditing(null)}
           onSave={(values) =>
-            editing === 'new'
+            editing === "new"
               ? createCharacter.mutateAsync(values).then(() => setEditing(null))
-              : updateCharacter.mutateAsync({ id: editing.id, ...values }).then(() => setEditing(null))
+              : updateCharacter
+                  .mutateAsync({ id: editing.id, ...values })
+                  .then(() => setEditing(null))
           }
-          onDelete={editing !== 'new' ? () => deleteCharacter.mutateAsync(editing.id).then(() => setEditing(null)) : undefined}
+          onDelete={
+            editing !== "new"
+              ? () =>
+                  deleteCharacter
+                    .mutateAsync(editing.id)
+                    .then(() => setEditing(null))
+              : undefined
+          }
         />
       ) : null}
     </SectionCard>
@@ -552,17 +671,17 @@ function CharactersSection({ storyId }: { storyId: string }) {
 
 **CharacterEditor** is a bottom-sheet `Modal` (follow the pattern at [app/story/[id]/index.tsx](app/story/[id]/index.tsx) lines 218–286, the "Add to library" modal). Fields:
 
-| Field | Input | Required |
-|-------|-------|----------|
-| Name | TextInput | ✅ |
-| Role | Segmented chips (Protagonist / Antagonist / Supporting / Other) | — |
-| Age | TextInput | — |
-| Gender | TextInput | — |
-| Occupation | TextInput | — |
-| Background | TextInput (multiline, minHeight 80) | — |
-| Appearance | TextInput (multiline, minHeight 60) | — |
-| Personality | TextInput (multiline, minHeight 60) | — |
-| Goals | TextInput (multiline, minHeight 60) | — |
+| Field       | Input                                                           | Required |
+| ----------- | --------------------------------------------------------------- | -------- |
+| Name        | TextInput                                                       | ✅       |
+| Role        | Segmented chips (Protagonist / Antagonist / Supporting / Other) | —        |
+| Age         | TextInput                                                       | —        |
+| Gender      | TextInput                                                       | —        |
+| Occupation  | TextInput                                                       | —        |
+| Background  | TextInput (multiline, minHeight 80)                             | —        |
+| Appearance  | TextInput (multiline, minHeight 60)                             | —        |
+| Personality | TextInput (multiline, minHeight 60)                             | —        |
+| Goals       | TextInput (multiline, minHeight 60)                             | —        |
 
 Buttons: **Save** (primary, navy), **Cancel** (outline), and **Delete** (text-only red) if editing existing.
 
@@ -576,11 +695,11 @@ Same shape as CharactersSection. SnippetCard shows:
 
 **SnippetEditor** modal fields:
 
-| Field | Input | Required |
-|-------|-------|----------|
-| Kind | Segmented chips (Note / Quote / Dialogue / Outline / Prompt) | ✅ |
-| Title | TextInput | — |
-| Body | TextInput multiline minHeight 160 | ✅ |
+| Field | Input                                                        | Required |
+| ----- | ------------------------------------------------------------ | -------- |
+| Kind  | Segmented chips (Note / Quote / Dialogue / Outline / Prompt) | ✅       |
+| Title | TextInput                                                    | —        |
+| Body  | TextInput multiline minHeight 160                            | ✅       |
 
 ### Step 10 — SectionCard + small helpers
 
@@ -588,7 +707,10 @@ Same shape as CharactersSection. SnippetCard shows:
 
 ```tsx
 export function SectionCard({
-  title, eyebrow, count, children,
+  title,
+  eyebrow,
+  count,
+  children,
 }: {
   title: string;
   eyebrow: string;
@@ -597,17 +719,39 @@ export function SectionCard({
 }) {
   const [open, setOpen] = useState(true);
   return (
-    <View style={{ marginHorizontal: 20, marginTop: 16, backgroundColor: '#FAF6F2', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(47,65,86,0.10)', overflow: 'hidden' }}>
-      <Pressable onPress={() => setOpen(v => !v)} style={{ padding: 16, flexDirection: 'row', alignItems: 'center' }}>
+    <View
+      style={{
+        marginHorizontal: 20,
+        marginTop: 16,
+        backgroundColor: "#FAF6F2",
+        borderRadius: 16,
+        borderWidth: 1,
+        borderColor: "rgba(47,65,86,0.10)",
+        overflow: "hidden",
+      }}
+    >
+      <Pressable
+        onPress={() => setOpen((v) => !v)}
+        style={{ padding: 16, flexDirection: "row", alignItems: "center" }}
+      >
         <View style={{ flex: 1 }}>
           <Text style={eyebrowStyle}>{eyebrow}</Text>
           <Text style={titleStyle}>
-            {title}{count != null ? ` · ${count}` : ''}
+            {title}
+            {count != null ? ` · ${count}` : ""}
           </Text>
         </View>
-        {open ? <ChevronUp size={16} color="rgba(47,65,86,0.42)" /> : <ChevronDown size={16} color="rgba(47,65,86,0.42)" />}
+        {open ? (
+          <ChevronUp size={16} color="rgba(47,65,86,0.42)" />
+        ) : (
+          <ChevronDown size={16} color="rgba(47,65,86,0.42)" />
+        )}
       </Pressable>
-      {open ? <View style={{ paddingHorizontal: 16, paddingBottom: 16, gap: 14 }}>{children}</View> : null}
+      {open ? (
+        <View style={{ paddingHorizontal: 16, paddingBottom: 16, gap: 14 }}>
+          {children}
+        </View>
+      ) : null}
     </View>
   );
 }
@@ -618,12 +762,19 @@ export function SectionCard({
 **Snippet kind badge colors** (suggested palette — match the rest of the app):
 
 ```ts
-const SNIPPET_KIND: Record<SnippetKind, { label: string; bg: string; color: string }> = {
-  note:     { label: 'Note',     bg: 'rgba(47,65,86,0.10)',   color: 'rgba(47,65,86,0.65)' },
-  quote:    { label: 'Quote',    bg: 'rgba(86,124,141,0.14)', color: '#567C8D' },
-  dialogue: { label: 'Dialogue', bg: 'rgba(196,83,74,0.12)',  color: '#C4534A' },
-  outline:  { label: 'Outline',  bg: 'rgba(196,153,74,0.14)', color: '#9A6B1A' },
-  prompt:   { label: 'Prompt',   bg: 'rgba(86,141,103,0.14)', color: '#3D7A57' },
+const SNIPPET_KIND: Record<
+  SnippetKind,
+  { label: string; bg: string; color: string }
+> = {
+  note: {
+    label: "Note",
+    bg: "rgba(47,65,86,0.10)",
+    color: "rgba(47,65,86,0.65)",
+  },
+  quote: { label: "Quote", bg: "rgba(86,124,141,0.14)", color: "#567C8D" },
+  dialogue: { label: "Dialogue", bg: "rgba(196,83,74,0.12)", color: "#C4534A" },
+  outline: { label: "Outline", bg: "rgba(196,153,74,0.14)", color: "#9A6B1A" },
+  prompt: { label: "Prompt", bg: "rgba(86,141,103,0.14)", color: "#3D7A57" },
 };
 ```
 
@@ -643,8 +794,8 @@ export function useUpsertStoryNotes() {
     }) => {
       const { data: userData } = await supabase.auth.getUser();
       const userId = userData.user?.id;
-      if (!userId) throw new Error('Not signed in');
-      const { error } = await supabase.from('story_notes').upsert({
+      if (!userId) throw new Error("Not signed in");
+      const { error } = await supabase.from("story_notes").upsert({
         story_id: input.storyId,
         user_id: userId,
         possible_titles: input.possible_titles,
@@ -696,7 +847,7 @@ export function useUpsertStoryNotes() {
 
 ## Notes for Implementation Agent
 
-- **Brand mark**: use `fontFamily: 'CormorantGlyphs_400Regular'`, size 32 on the hub and size 26 in the per-story page header. Color `#2F4156`. The literal is `'noveḷɑ'` (note the ḷ and ɑ — already standard across the app, see [app/(tabs)/profile.tsx](app/(tabs)/profile.tsx) bottom for an exact reference).
+- **Brand mark**: use `fontFamily: 'CormorantGlyphs_400Regular'`, size 32 on the hub and size 26 in the per-story page header. Color `#2F4156`. The literal is `'noveḷɑ'` (note the ḷ and ɑ — already standard across the app, see [app/(tabs)/profile.tsx](<app/(tabs)/profile.tsx>) bottom for an exact reference).
 - **Supabase typing tech debt**: this codebase has pre-existing `tsc` errors where chained Supabase queries resolve to `never`. Cast the result with `as StoryNotesRow | null` / `as StoryCharacterRow[]` etc., matching the pattern in [lib/queries/chapters.ts](lib/queries/chapters.ts). Do **not** try to fix the upstream typing — out of scope.
 - **Modal pattern**: copy the bottom-sheet from [app/story/[id]/index.tsx](app/story/[id]/index.tsx) (search "showLibraryModal"). Outer `Pressable` is the scrim (closes on tap), inner `Pressable` with `onPress={() => {}}` absorbs taps so the sheet itself doesn't close.
 - **Routing**: the new screen at `app/notes/[storyId].tsx` is **outside** `(tabs)`, so the tab bar will still render. That's intentional — Ericka stays in the Notes section while editing.
@@ -711,4 +862,4 @@ export function useUpsertStoryNotes() {
 - Existing modal pattern: [app/story/[id]/index.tsx](app/story/[id]/index.tsx) (Add to library bottom sheet)
 - Existing query module pattern: [lib/queries/reading_list.ts](lib/queries/reading_list.ts)
 - Existing chip / tag picker (do NOT reuse directly — TagPicker is global tags; we want plain text chips per-field): [components/TagPicker.tsx](components/TagPicker.tsx)
-- Brand mark usage: [app/(tabs)/profile.tsx](app/(tabs)/profile.tsx), [app/(tabs)/about.tsx](app/(tabs)/about.tsx), [app/about/novella.tsx](app/about/novella.tsx)
+- Brand mark usage: [app/(tabs)/profile.tsx](<app/(tabs)/profile.tsx>), [app/(tabs)/about.tsx](<app/(tabs)/about.tsx>), [app/about/novella.tsx](app/about/novella.tsx)
